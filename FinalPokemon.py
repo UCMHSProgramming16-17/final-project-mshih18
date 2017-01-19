@@ -13,7 +13,7 @@ type1list = []
 type2list = []
 
 # make a new url for each type
-for x in range(1,152):
+for x in range(1, 721):
     pokemonnum = str(x)
     url = endpoint + pokemonnum + "/"
    
@@ -32,7 +32,8 @@ for x in range(1,152):
         type1 = pokemon['types'][1]['type']['name']
         type2 = pokemon['types'][0]['type']['name']
     else:
-        type1 = type2 = pokemon['types'][0]['type']['name']
+        type1 = pokemon['types'][0]['type']['name']
+        type2 = 'None'
         
     # add data to end of corresponding list
     namelist.append(name)
@@ -40,6 +41,10 @@ for x in range(1,152):
     weightlist.append(weight)
     type1list.append(type1)
     type2list.append(type2)
+    
+    # update user on program, because it takes very long
+    if x % 72 == 0:
+        print('******')
 
 
 # make a dataframe from lists
@@ -55,7 +60,7 @@ df = pd.DataFrame({
 print(df)
 
 # import bar chart commands from bokeh
-from bokeh.charts import Bar, Scatter, output_file, save
+from bokeh.charts import Bar, Scatter, Chord, output_file, save
 
 # make bar chart and save it to 'PokemonType.html'
 BarChart = Bar(df, 'type1', values = 'name', agg = 'count', title = 'Frequency of Pokemon by Type', bar_width = 0.5,
@@ -68,3 +73,12 @@ ScatterPlot = Scatter(df, x = "weight", y = "height", color = "type1", title = "
 xlabel = 'Weight', ylabel = 'Height')
 output_file('HeightWeight.html')
 save(ScatterPlot)
+
+df2 = df[df['type2'] != 'None']
+
+print(df2)
+
+# make chord chart and save it to 'TypeRelation.html'
+ChordChart = Chord(df2, source="type1", target="type2")
+output_file('TypeRelation.html')
+save(ChordChart)
