@@ -12,8 +12,8 @@ weightlist = []
 type1list = []
 type2list = []
 
-# make a new url for each type
-for x in range(1, 721):
+# make a new url for each pokemon
+for x in range(1, 722):
     pokemonnum = str(x)
     url = endpoint + pokemonnum + "/"
    
@@ -44,7 +44,7 @@ for x in range(1, 721):
     
     # update user on program, because it takes very long
     if x % 72 == 0:
-        print('******')
+        print(str((x/72)*10)+'%')
 
 
 # make a dataframe from lists
@@ -63,17 +63,18 @@ print(df)
 from bokeh.charts import Bar, Scatter, Chord, output_file, save
 
 # make bar chart and save it to 'PokemonType.html'
-BarChart = Bar(df, 'type1', values = 'name', agg = 'count', title = 'Frequency of Pokemon by Type', bar_width = 0.5,
+BarChart = Bar(df, label = 'type1', values = 'name', agg = 'count', title = 'Frequency of Pokemon by Type', legend = False, bar_width = 0.5,
 xlabel = 'Type', ylabel = 'Amount')
 output_file('PokemonType.html')
 save(BarChart)
 
 # make scatter plot and save it to 'HeightWeight.html'
-ScatterPlot = Scatter(df, x = "weight", y = "height", color = "type1", title = "Weight vs. Height (Sorted by Type)",
+ScatterPlot = Scatter(df, x = "weight", y = "height", color = "type1", title = "Weight vs. Height (Sorted by Type)", legend = 'top_right',
 xlabel = 'Weight', ylabel = 'Height')
 output_file('HeightWeight.html')
 save(ScatterPlot)
 
+# make new data table without single-type pokemon
 df2 = df[df['type2'] != 'None']
 
 print(df2)
